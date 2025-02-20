@@ -3,7 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 // middleware
@@ -34,8 +34,67 @@ try {
     const userCollections = db.collection("Users")
     const taskCollections = db.collection("Tasks")
 
+    // API: post user data
+    app.post('/add-users', async (req, res)=>{
+        const userData = req.body;
+
+        // check if the data already in user DB
+        const query = {email: userData.email};
+        const isExists = await userCollections.findOne(query);
+
+        if(isExists){
+            return res.status(409).json({message: "Data already ache! save korar dorkar nai."})
+        }else{
+            const result = await userCollections.insertOne(userData);
+            res.send(result);
+        }
+    })
 
     
+    // API: fetch user data through email
+    app.get('/user/:email', async (req, res)=>{
+        const email = req.params.email;
+        const query = {email:email};
+        const result = await userCollections.findOne(query)
+        res.send(result)
+    })
+
+    // API: post a task
+    app.post('/tasks', async (req, res)=>{
+        const taskData = req.body;
+        const result = await taskCollections.insertOne(taskData);
+        res.send(result);
+    })
+
+    // API: get task data user email
+    app.get('/tasks/:email', async (req, res)=>{
+        const email = req.params.email;
+        const query = {email:email};
+        const {category} = req.query;
+
+        if(category){
+            query.category = category ;
+        }
+
+        const result = await taskCollections.find(query).toArray();
+        res.send(result);
+    })
+
+
+    // API: Delete task data with their _id
+    app.delete('/task/:id', async (req, res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await taskCollections.deleteOne(query);
+        res.send(result);
+    })
+
+
+    // API: update(put) task 
+
+
+
+
 
 
 

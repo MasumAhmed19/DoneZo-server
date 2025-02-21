@@ -76,7 +76,7 @@ try {
             query.category = category ;
         }
 
-        const result = await taskCollections.find(query).toArray();
+        const result = await taskCollections.find(query).sort({taskTime:-1}).toArray();
         res.send(result);
     })
 
@@ -95,9 +95,6 @@ try {
 
 
 
-
-
-
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 } finally {
@@ -107,7 +104,7 @@ try {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('Welcome to the TODO app backend')
+    res.send('Welcome to the DoneZo TODO app backend')
   })
   
 app.listen(port, () => {

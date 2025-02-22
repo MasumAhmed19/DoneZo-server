@@ -7,7 +7,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // middleware
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: ["https://donezo-e4856.web.app", "http://localhost:5173", "http://localhost:5174"],
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -61,7 +61,7 @@ async function run() {
     });
 
     // API: post a task
-    app.post("/tasks", async (req, res) => {
+    app.post("/add-tasks", async (req, res) => {
       const taskData = req.body;
 
       const result = await taskCollections.insertOne(taskData);
@@ -136,8 +136,6 @@ async function run() {
         });
       }
     });
-
-
 
     // Update task title and description
     app.put("/task-update/:id", async (req, res) => {
@@ -227,13 +225,14 @@ async function run() {
       }
     });
 
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
   } finally {
     // Ensures that the client will close when you finish/error
   }
+
 }
 run().catch(console.dir);
 

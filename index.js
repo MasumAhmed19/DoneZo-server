@@ -7,7 +7,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // middleware
 const corsOptions = {
-  origin: ["https://donezo-e4856.web.app", "http://localhost:5173", "http://localhost:5174"],
+  origin: ["https://donezo-e4856.web.app", "http://localhost:5173", "http://localhost:5174", "https://donezoserver.vercel.app"],
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -31,8 +31,8 @@ async function run() {
     const taskCollections = db.collection("Tasks");
 
     // // Create indexes
-    await taskCollections.createIndex({ category: 1, order: 1 });
-    await taskCollections.createIndex({ updatedAt: -1 });
+    // await taskCollections.createIndex({ category: 1, order: 1 });
+    // await taskCollections.createIndex({ updatedAt: -1 });
 
     // API: post user data
     app.post("/add-users", async (req, res) => {
@@ -59,6 +59,11 @@ async function run() {
       const result = await userCollections.findOne(query);
       res.send(result);
     });
+
+
+
+
+  
 
     // API: post a task
     app.post("/add-tasks", async (req, res) => {
@@ -224,6 +229,15 @@ async function run() {
         res.status(500).json({ error: "Failed to delete task" });
       }
     });
+
+
+
+
+
+
+
+
+
 
     // await client.db("admin").command({ ping: 1 });
     // console.log(
